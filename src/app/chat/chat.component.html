@@ -1,3 +1,75 @@
-<p>
-  chat works!
-</p>
+<div class="container h-100">
+  <div class="row h-100 justify-content-center align-items-center mt-5">
+    <div class="col-3">
+      <div class="jumbotron">
+        <h5>Vartotojai</h5>
+      <br/>
+        <ul class="list-group h-50">
+          <li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let user of users">
+            <small class="text-capitalize ">{{user.username}}</small>
+            <span class="badge badge-pill" [ngClass]="(user.online)?'badge-success':'badge-secondary'">•</span>
+          </li>
+        </ul>
+        <div>
+          <form [formGroup]="usernameForm">
+            <div class="form-group mt-2 w-100">
+              <input type="text" class="form-control" id="username"
+                     placeholder="Pakeisti slapyvardį" formControlName="newUsername">
+            </div>
+            <button type="submit" class="btn btn-primary  btn-block" (click)="updateUsername()"><i *ngIf="showSpinner" class="fa fa-spinner fa-spin"></i> <span *ngIf="!showSpinner">Keisti</span> </button>
+          </form>
+          <button type="submit" class=" btn-outline-danger align-text-bottom btn btn-block mt-2"   (click)="logout()">Atsijungti</button>
+
+        </div>
+      </div>
+    </div>
+    <div class="col-9 mx-auto">
+      <div class="jumbotron">
+        <div class="h-75">
+          <div class="chat-box " #chat>
+            <div *ngFor="let message of messages">
+              <div class="row my-message mt-1 mx-1" *ngIf="userid == message.user._id">
+                <div class="col-10 text my-text "><a *ngIf="message.image" href="http://localhost:3000/{{message.image}}"  download="http://localhost:3000/{{message.image}}">Failas</a><p>{{message.message}}</p></div>
+                <div class="col-2 text-center">
+                  <img src="https://image.flaticon.com/icons/svg/18/18601.svg" class="avatar">
+                  <br />
+                  <small class="chat-username text-capitalize">{{message.user.username}}</small>
+                </div>
+              </div>
+              <div class="row other-message mt-1 mx-1" *ngIf="userid != message.user._id">
+                <div class="col-2 text-center ">
+                  <img src="https://image.flaticon.com/icons/svg/18/18601.svg" class="avatar">
+                  <br />
+                  <small class="chat-username text-capitalize">{{message.user.username}}</small>
+                </div>
+                <div class="col-10 text other-text"><a *ngIf="message.image" href="http://localhost:3000/{{message.image}}" download="http://localhost:3000/{{message.image}}">Failas</a><p>{{message.message}}</p></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <hr class="my-4">
+        <div class="h-25">
+          <form [formGroup]="messageForm">
+            <div class="input-group h-100">
+              <div class="input-group-prepend">
+                <button type="button" class="btn btn-primary" (click)="PostMessage()">Siųsti</button>
+
+                <label for="file-upload" class="custom-file-upload">
+                  <i class="fa fa-cloud-upload"></i>
+                </label>
+                <input id="file-upload" type="file" accept="image/*" (input)="onFileUpload($event.target.files)" />
+                <div class="file-upload-name" *ngIf="image">
+                  <button class='btn btn-outline-danger h-100' (click)="removeImage()" style='background-color:transparent;'>
+                    <i class="fa fa-close"></i> <br ><span>Failas</span>
+                  </button>
+                </div>
+              </div>
+              <textarea class="form-control" aria-label="With textarea" formControlName="message"
+                        (keyup.enter)="PostMessage()"></textarea>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
